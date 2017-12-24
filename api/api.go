@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"log"
 	"net/http"
 
@@ -22,14 +21,13 @@ type API struct {
 func NewAPI(name string, version string, port string) (*API, error) {
 	router := chi.NewRouter()
 	router.Use(middleware.RequestID)
-	router.Use(middleware.RequestID)
 	router.Use(middleware.RealIP)
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
 
 	ver, err := NewVersion(version)
 	if err != nil {
-		return nil, errors.New("api: bad string version format")
+		log.Fatal(err)
 	}
 
 	return &API{
@@ -43,11 +41,24 @@ func NewAPI(name string, version string, port string) (*API, error) {
 //Initialize the API
 func (api *API) Initialize() {
 
+	api.Router.Get("/hi", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("bye"))
+	})
+
+	//Verify if
+	api.Router.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(404)
+		w.Write([]byte(" {\"message\":\"No routes defined in your API\"} "))
+	})
+
 }
 
 //Run the API
 func (api *API) Run() {
 	socket := ":" + api.Port
+
+	log.Println("Initializing mango API: " + api.ToJSON())
+	api.Initialize()
 
 	log.Println("Starting mango API: " + api.ToJSON())
 	log.Fatal(http.ListenAndServe(socket, api.Router))
