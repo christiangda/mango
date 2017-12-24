@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"errors"
 	"strconv"
 	"strings"
@@ -60,4 +61,10 @@ func (v *Version) ToString() string {
 	}
 
 	return version
+}
+
+//ToJSON return version
+func (v *Version) ToJSON() string {
+	json, _ := json.Marshal(v)
+	return string(json)
 }

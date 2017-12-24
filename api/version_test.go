@@ -70,7 +70,31 @@ func TestToString(t *testing.T) {
 		version, _ := api.NewVersion(test.input)
 
 		if got := version.ToString(); !reflect.DeepEqual(got, test.want) {
-			t.Errorf("GetVersion(%q) = %v, and want is = %v", test.input, got, test.want)
+			t.Errorf("ToString(%q) = %v, and want is = %v", test.input, got, test.want)
+		}
+	}
+}
+
+func TestToJSON(t *testing.T) {
+	var tests = []struct {
+		input string
+		want  string
+	}{
+		{"1.0.1", "{\"major\":1,\"minor\":0,\"release\":1}"},
+		{"1.1.1", "{\"major\":1,\"minor\":1,\"release\":1}"},
+		{"1.0.a", "null"},
+		{"1.a.0", "null"},
+		{"a.0.0", "null"},
+		{"1.0.0.0", "null"},
+		{"", "null"},
+	}
+
+	for _, test := range tests {
+
+		version, _ := api.NewVersion(test.input)
+
+		if got := version.ToJSON(); !reflect.DeepEqual(got, test.want) {
+			t.Errorf("ToJSON(%q) = %v, and want is = %v", test.input, got, test.want)
 		}
 	}
 }
