@@ -1,4 +1,4 @@
-package mango
+package main
 
 import "github.com/christiangda/mango/api"
 
@@ -7,6 +7,6 @@ func main() {
 	var version = "1.0.0"
 	var port = "8080"
 
-	api := api.NewAPI(name, version, port)
-	api.Run()
+	myapi, _ := api.NewAPI(name, version, port)
+	myapi.Run()
 }

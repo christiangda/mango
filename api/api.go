@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
 	"net/http"
@@ -11,10 +12,10 @@ import (
 
 // API propeties
 type API struct {
-	Name    string
-	Version *Version
-	Port    string
-	Router  chi.Router
+	Name    string     `json:"name"`
+	Version *Version   `json:"version"`
+	Port    string     `json:"port"`
+	Router  chi.Router `json:"-"`
 }
 
 //NewAPI constructor
@@ -47,5 +48,13 @@ func (api *API) Initialize() {
 //Run the API
 func (api *API) Run() {
 	socket := ":" + api.Port
+
+	log.Println("Starting mango API: " + api.ToJSON())
 	log.Fatal(http.ListenAndServe(socket, api.Router))
+}
+
+//ToJSON return Json string representation of API struct
+func (api *API) ToJSON() string {
+	json, _ := json.Marshal(api)
+	return string(json)
 }
