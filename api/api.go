@@ -11,15 +11,17 @@ import (
 
 // API propeties
 type API struct {
-	Name    string     `json:"name"`
-	Version *Version   `json:"version"`
-	Port    string     `json:"port"`
-	Router  chi.Router `json:"-"`
+	Name        string     `json:"name"`
+	Version     *Version   `json:"version"`
+	Port        string     `json:"port"`
+	Environment string     `json:"environment"`
+	Router      chi.Router `json:"-"`
 }
 
 //NewAPI constructor
-func NewAPI(name string, version string, port string) (*API, error) {
+func NewAPI(name string, version string, port string, env string) *API {
 	router := chi.NewRouter()
+
 	router.Use(middleware.RequestID)
 	router.Use(middleware.RealIP)
 	router.Use(middleware.Logger)
@@ -31,11 +33,12 @@ func NewAPI(name string, version string, port string) (*API, error) {
 	}
 
 	return &API{
-		Name:    name,
-		Version: ver,
-		Port:    port,
-		Router:  router,
-	}, nil
+		Name:        name,
+		Version:     ver,
+		Port:        port,
+		Environment: env,
+		Router:      router,
+	}
 }
 
 //Initialize the API
@@ -48,7 +51,7 @@ func (api *API) Initialize() {
 	//Verify if
 	api.Router.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(404)
-		w.Write([]byte(" {\"message\":\"No routes defined in your API\"} "))
+		w.Write([]byte(" {\"message\":\"Upss!, this route doesn't exist\"} "))
 	})
 
 }
