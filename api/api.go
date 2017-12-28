@@ -60,10 +60,10 @@ func (api *API) Initialize() {
 func (api *API) Run() {
 	socket := ":" + api.Port
 
-	log.Println("Initializing mango API: " + api.ToJSON())
+	log.Println("Initializing API: " + api.ToJSON())
 	api.Initialize()
 
-	log.Println("Starting mango API: " + api.ToJSON())
+	log.Println("Starting API: " + api.ToJSON())
 	log.Fatal(http.ListenAndServe(socket, api.Router))
 }
 

@@ -7,33 +7,47 @@ import (
 	"strings"
 )
 
-//Version according Semantic Versioning 2.0.0
+var (
+	// ErrBadStringFormat is returned when the string's version ([\"major\"].[minor].[patch]) has a bad format
+	ErrBadStringFormat = errors.New("Version: Bad string format")
+
+	// ErrBadStringFormatMajor is returned when the string's version has a bad format and major is a problem
+	ErrBadStringFormatMajor = errors.New("Version: The major part of string's version ([\"major\"].[minor].[patch]) cannot be converted to int")
+
+	// ErrBadStringFormatMinor is returned when the string's version has a bad format and minor is a problem
+	ErrBadStringFormatMinor = errors.New("Version: The minor part of string's version ([major].[\"minor\"].[patch]) cannot be converted to int")
+
+	// ErrBadStringFormatPatch is returned when the string's version has a bad format and patch is a problem
+	ErrBadStringFormatPatch = errors.New("Version: The minor part of string's version ([major].[minor].[\"patch\"]) cannot be converted to int")
+)
+
+// Version according Semantic Versioning 2.0.0
 type Version struct {
 	Major int `json:"major"`
 	Minor int `json:"minor"`
 	Patch int `json:"release"`
 }
 
-//NewVersion constructor from string
+// NewVersion constructor from string
 func NewVersion(version string) (*Version, error) {
 	parts := strings.Split(version, ".")
 	if len(parts) != 3 {
-		return nil, errors.New("Version: bad string version format")
+		return nil, ErrBadStringFormat
 	}
 
 	major, err := strconv.Atoi(parts[0])
 	if err != nil {
-		return nil, errors.New("Version: bad version format ")
+		return nil, ErrBadStringFormatMajor
 	}
 
 	minor, err := strconv.Atoi(parts[1])
 	if err != nil {
-		return nil, errors.New("Version: bad version format")
+		return nil, ErrBadStringFormatMinor
 	}
 
 	patch, err := strconv.Atoi(parts[2])
 	if err != nil {
-		return nil, errors.New("Version: bad version format")
+		return nil, ErrBadStringFormatPatch
 	}
 
 	return &Version{
@@ -43,12 +57,12 @@ func NewVersion(version string) (*Version, error) {
 	}, nil
 }
 
-//GetVersion return version
+// GetVersion return version
 func (v *Version) GetVersion() *Version {
 	return v
 }
 
-//ToString return version
+// ToString return version
 // v := Version{1,0,0}
 // fmt.println("The version is: ", v.ToString())
 func (v *Version) ToString() string {
@@ -65,7 +79,7 @@ func (v *Version) ToString() string {
 	return version
 }
 
-//String this is Stringer implementation
+// String this is Stringer implementation
 // v := Version{1,0,0}
 // fmt.println("The version is: ", v)
 func (v *Version) String() string {
@@ -82,7 +96,7 @@ func (v *Version) String() string {
 	return version
 }
 
-//ToJSON return version
+// ToJSON return version
 // v := Version{1,0,0}
 // fmt.println("The version is: ", v.ToJSON())
 func (v *Version) ToJSON() string {
