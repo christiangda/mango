@@ -62,23 +62,6 @@ func (v *Version) GetVersion() *Version {
 	return v
 }
 
-// ToString return version
-// v := Version{1,0,0}
-// fmt.println("The version is: ", v.ToString())
-func (v *Version) ToString() string {
-	version := ""
-
-	if v != nil {
-		major := strconv.Itoa(v.Major)
-		minor := strconv.Itoa(v.Minor)
-		patch := strconv.Itoa(v.Patch)
-
-		version = major + "." + minor + "." + patch
-	}
-
-	return version
-}
-
 // String this is Stringer implementation
 // v := Version{1,0,0}
 // fmt.println("The version is: ", v)

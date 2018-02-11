@@ -10,5 +10,7 @@ func main() {
 
 	myapi := api.NewAPI(name, version, port, environment)
 
+	myapi.SetRoutes()
+
 	myapi.Run()
 }
